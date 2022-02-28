@@ -13,6 +13,17 @@ def create_app():
     app = Flask(__name__)
     db = MongoClient(os.environ.get("MONGO_URI"), tlsCAFile=ca)
     app.db = db.weatherapp
+
+    forecastTurku(app)
+
+    @app.route("/")
+    def home():
+        return render_template("home.html")
+    
+    
+    return app
+
+def forecastTurku(app):
     API_KEY = os.environ.get("API_KEY")
 
     #Forms the API call url for openweathermap's Geocoding API
@@ -55,11 +66,6 @@ def create_app():
     else:
         print("error")
 
-    @app.route("/")
-    def home():
-        return render_template("home.html")
-
-
-    
-    
-    return app
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)
